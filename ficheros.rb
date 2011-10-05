@@ -6,11 +6,13 @@ puts ("que directorio quiere buscar")
 @a = gets 
 puts @a
 Find.find("/home/ruben/Descargas") do |f|
-    type = case
+
+	type = case
     # si la ruta es un fichero -> F
         when File.file?(f) then "F"
         # si la ruta es un directorio -> D
         when File.directory?(f) then "D"
+	Find.prune
         # si no sabemos lo que es -> ?
         else "?"
     end
