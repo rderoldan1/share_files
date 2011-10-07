@@ -1,3 +1,5 @@
+require 'find'
+
 @a = {}
 puts "escriba el comando"
 @a = gets.split(' ')
@@ -5,3 +7,8 @@ puts "escriba el comando"
 @a.each do |com, line|
 	puts "#{com} and #{line}"
 end
+
+puts Dir.entries(@a[1])
+					
+
+
