@@ -1,5 +1,4 @@
 p2p application to share files and emulate a local file system
 
 to run dir.rb write:
-ruby dir.rb "/home" where home
-is the folder where you like change.
+ruby dir.rb then write the comand cd or ls
