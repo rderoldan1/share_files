@@ -9,19 +9,16 @@ line = {}
 def cd (route)
 	Dir.chdir(route)
 	puts Dir.pwd
-	
 end
 
-
+#emula el comando ls
 def ls(route)
+	#entries aplica el ls al directorio
 	puts Dir.entries(route)
-
 end
-
-
-
 
 puts "escriba el comando"
+#aplica metodo split al comando ingresado
 line = gets.split(' ')
 puts Dir.pwd
 
