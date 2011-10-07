@@ -6,14 +6,20 @@ server = TCPServer.new(2000)
 
 loop do 
 	Thread.start(server.accept) do |connection|
-		n = connection.gets
+		connection.puts("Nombre")
+		n = connection.gets.chomp
 		@client [n] = connection	
-		@client.each do | name, socket |
-			if socket.eql? connection
-				puts "#{n} dijo "
-			else
-				socket.puts(n)
+		connection.puts("Escriba un mensaje")
+		while line = connection.gets
+			
+			@client.each do | name, socket |
+				if socket.eql? connection
+				else	
+					socket.puts(line)
+					puts("#{name}")
+				end
 			end
-		end		
+		end
+		
 	end	
 end

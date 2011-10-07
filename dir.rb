@@ -1,4 +1,4 @@
-require 'find'
+#require 'find'
 
 
 @comand = {}
