@@ -31,10 +31,12 @@ end
 
 Thread.new do
 	loop do
-		puts messageIn
-		messageIn = client.gets.chomp.split(' ')
+		
+		messageIn = client.gets.chomp
+		puts messageIn		
+		temp  = messageIn.split(' ')
 #		puts messageIn
-		command [messageIn[0]] = messageIn[1]
+		command [temp[0]] = temp[1]
 		command.each do |sufix, route|
 			if (sufix.eql? "cd")
 				cd(route)	
