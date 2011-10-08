@@ -31,7 +31,6 @@ end
 
 Thread.new do
 	loop do
-		
 		messageIn = client.gets.chomp
 		puts messageIn		
 		temp  = messageIn.split(' ')
@@ -47,6 +46,9 @@ Thread.new do
 				@n = 1
 			end
 		end
+		command.delete(0,1)
+		puts command
+		
 	end
 
 end
