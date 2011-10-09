@@ -1,53 +1,62 @@
 require 'socket'
 
-client = TCPSocket.new('127.0.0.1','2000')
+@client = TCPSocket.new('127.0.0.1','2000')
+
 @n = 0
+messageIn = {}
+command = {}
 
 #emula comando cd
 def cd (route)
 	Dir.chdir(route)
-	puts Dir.pwd
+	#puts Dir.pwd
+	a = Dir.pwd
+	send_mess(a)
 end
 
 #emula el comando ls
 def ls(route)
-	#entries aplica el ls al directorio
-	puts Dir.entries(route)
+	a = Dir.entries(route)
+	send_mess(a)
+end 
+
+#envia mensaje por socket
+def send_mess(mess)
+	#puts mess 
+	@client.puts(mess)	
 end
 
+#revive mensaje del socket
+def recv_mess()
+	menssage = @client.gets.chomp
+	return (menssage)
+end
 
-messageIn = {}
-command = {}
-
-
+#hilo de envio de mensajes
 Thread.new do 
 	loop do
 		messageOut = gets
-		client.puts(messageOut)
+		send_mess(messageOut)
 	end
 
 end
 
-
+#hilo de recivo de mensajes
 Thread.new do
 	loop do
-		messageIn = client.gets.chomp
+		messageIn = recv_mess()
 		puts messageIn		
 		temp  = messageIn.split(' ')
-#		puts messageIn
-		command [temp[0]] = temp[1]
-		command.each do |sufix, route|
-			if (sufix.eql? "cd")
-				cd(route)	
-			elsif (sufix.eql? "ls")
-				ls(route)
-			end
-			if (sufix.eql? 'quit')
+		command [0] = temp[0]
+		command [1] = temp[1]
+	
+			if (temp[0].eql? "cd")
+				cd(temp[1])	
+			elsif (temp[0].eql? "ls")
+				ls(temp[1])
+			elsif (temp[0].eql? 'quit')
 				@n = 1
 			end
-		end
-		command.delete(0,1)
-		puts command
 		
 	end
 

@@ -8,6 +8,7 @@ loop do
 	Thread.start(server.accept) do |connection|
 		connection.puts("Nombre")
 		n = connection.gets.chomp
+		puts n
 		@client [n] = connection	
 		connection.puts("Escriba un mensaje")
 		while line = connection.gets
