@@ -3,10 +3,6 @@ require 'socket'
 @client = TCPSocket.new('127.0.0.1','2000')
 
 @n = 0
-messageIn = {}
-@command = {}
-
-
 
 #emula comando cd
 def cd (route)
@@ -30,7 +26,6 @@ end
 
 #envia mensaje por socket
 def send_mess(mess)
-	#puts mess
 	@client.puts(mess)	
 end
 
@@ -41,27 +36,30 @@ def recv_mess()
 end
 
 def thread_send
-#	begin	
+	begin	
 		#hilo de envio de mensajes
 		while (@n.eql? 0)
 			messageOut = gets
 			send_mess(messageOut)
 		end
-#	end
+	end
 end
 
 
 
 
 def thread_recv
-#	begin
+	messageIn = {}
+	command = {}
+
+	begin
 	#hilo de recivo de mensajes
 		while (@n.eql? 0)
 			messageIn = recv_mess()
 			puts messageIn		
 			temp  = messageIn.split(' ')
-			@command [0] = temp[0]
-			@command [1] = temp[1]		
+			command [0] = temp[0]
+			command [1] = temp[1]		
 				if (temp[0].eql? "cd")
 					cd(temp[1])	
 				elsif (temp[0].eql? "ls")
@@ -71,7 +69,7 @@ def thread_recv
 				end
 		
 		end
-#	end
+	end
 end
 
 
