@@ -19,12 +19,18 @@ end
 #emula el comando ls
 def ls(route)
 	a = Dir.entries(route)
-	send_mess(a)
+	exp = /^[a-zA-Z|0-9]/
+	a.each do | file |
+		if (exp.match(file))
+			puts file
+			send_mess(file)
+		end
+	end
 end 
 
 #envia mensaje por socket
 def send_mess(mess)
-	#puts mess 
+	#puts mess
 	@client.puts(mess)	
 end
 
