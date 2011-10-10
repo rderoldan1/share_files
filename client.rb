@@ -4,7 +4,9 @@ require 'socket'
 
 @n = 0
 messageIn = {}
-command = {}
+@command = {}
+
+
 
 #emula comando cd
 def cd (route)
@@ -32,38 +34,47 @@ def recv_mess()
 	return (menssage)
 end
 
-#hilo de envio de mensajes
-Thread.new do 
-	loop do
-		messageOut = gets
-		send_mess(messageOut)
-	end
-
+def thread_send
+#	begin	
+		#hilo de envio de mensajes
+		while (@n.eql? 0)
+			messageOut = gets
+			send_mess(messageOut)
+		end
+#	end
 end
 
-#hilo de recivo de mensajes
-Thread.new do
-	loop do
-		messageIn = recv_mess()
-		puts messageIn		
-		temp  = messageIn.split(' ')
-		command [0] = temp[0]
-		command [1] = temp[1]
-	
-			if (temp[0].eql? "cd")
-				cd(temp[1])	
-			elsif (temp[0].eql? "ls")
-				ls(temp[1])
-			elsif (temp[0].eql? 'quit')
-				@n = 1
-			end
+
+
+
+def thread_recv
+#	begin
+	#hilo de recivo de mensajes
+		while (@n.eql? 0)
+			messageIn = recv_mess()
+			puts messageIn		
+			temp  = messageIn.split(' ')
+			@command [0] = temp[0]
+			@command [1] = temp[1]		
+				if (temp[0].eql? "cd")
+					cd(temp[1])	
+				elsif (temp[0].eql? "ls")
+					ls(temp[1])
+				elsif (temp[0].eql? 'quit')
+					@n = 1
+				end
 		
-	end
-
+		end
+#	end
 end
 
-while (@n.eql? 0 )
 
-end
+thread1 = Thread.new{thread_recv}
+thread2 = Thread.new{thread_send}
+
+thread1.join
+thread2.join
+
+
 
 

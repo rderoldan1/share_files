@@ -9,6 +9,8 @@ loop do
 		connection.puts("Nombre")
 		n = connection.gets.chomp
 		puts n
+		m = connection.addr
+		puts m
 		@client [n] = connection	
 		connection.puts("Escriba un mensaje")
 		while line = connection.gets
