@@ -8,6 +8,11 @@ def send_mess(mess)
 end
 
 def suma(a,b)
+	c = a+b
+	send_mess(c)
+end
+
+def resta(a,b)
 	c = a-b
 	send_mess(c)
 end
@@ -27,7 +32,10 @@ Thread.new do
 	puts mess1
 		if( mess1.eql? "suma")
 		suma(2,4)	
+		elsif( mess1.eql? "resta")
+		suma(2,4)	
 		end
+
 	end
 end
 
