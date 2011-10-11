@@ -24,6 +24,32 @@ def ls(route)
 	end
 end 
 
+#emula comando cp
+def cp(route)
+	dir = File.split(route)
+	puts dir[0]
+	Dir.chdir(dir[0])
+	if(File.exists?(dir[1]))
+		puts "exist"
+		puts Dir.pwd
+		puts dir[1]
+		ext = File.extname(dir[1])
+		send_mess("create #{dir[1]} ")
+#		file = File.open(dir[1])
+#		send_mess(file)
+#		file.close
+		
+	else
+		send_mess("error el archivo no existe")
+	end
+	
+end
+
+def create(name)
+	f = File.new(name, "a+")
+	f.close
+end
+
 #envia mensaje por socket
 def send_mess(mess)
 	@client.puts(mess)	
@@ -55,17 +81,22 @@ def thread_recv
 	begin
 	#hilo de recivo de mensajes
 		while (@n.eql? 0)
+			command = []			
 			messageIn = recv_mess()
 			puts messageIn		
 			temp  = messageIn.split(' ')
-			command [0] = temp[0]
-			command [1] = temp[1]		
 				if (temp[0].eql? "cd")
 					cd(temp[1])	
 				elsif (temp[0].eql? "ls")
 					ls(temp[1])
 				elsif (temp[0].eql? 'quit')
 					@n = 1
+				elsif (temp[0].eql? "cp")
+					puts temp[1]					
+					cp(temp[1])
+					
+				elsif (temp[0].eql? "create")
+					create(temp[1])
 				end
 		
 		end
