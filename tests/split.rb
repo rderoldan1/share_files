@@ -1,8 +1,8 @@
 a = gets.chomp
 temp = a.split(' ')
-b = File.split(a)
-puts b[0]
-puts b[1]
+#b = File.split(a)
+#puts b[0]
+#puts b[1]
 
 		if (temp[1].eql? "")
 					puts "entre1"
@@ -19,8 +19,8 @@ puts b[1]
 					archivo = path
 				else
 					puts 'diferente'
-					@ruta = '/'+@ruta+'/'+path
-					puts @ruta
+					@ruta = @ruta+'/'+path
+				#	puts @ruta
 				end
 			end
 			puts @ruta

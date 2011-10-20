@@ -1,0 +1,7 @@
+p2p application to share files and emulate a local file system
+to run the application first run the server with the follow 
+command: ruby server.rb
+then run the client with 
+ruby client.rb
+
+

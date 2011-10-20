@@ -18,7 +18,7 @@ def ls(route)
 	exp = /^[a-zA-Z|0-9]/
 	a.each do | file |
 		if (exp.match(file))
-			puts file
+			#puts file
 			send_mess(file)
 		end
 	end
@@ -35,18 +35,31 @@ def cp(route)
 		puts dir[1]
 		ext = File.extname(dir[1])
 		send_mess("create #{dir[1]} ")
-#		file = File.open(dir[1])
-#		send_mess(file)
-#		file.close
+		file = File.open(dir[1])
+		file.each do |line|
+			send_mess(line)			
+						
+		end	
+		file.close
+		send_mess("eof")		
 		
 	else
 		send_mess("error el archivo no existe")
 	end
 	
 end
-
+#crea un archivo 
 def create(name)
-	f = File.new(name, "a+")
+	f = File.new(name, "a")
+	message = ""
+	while (message != "eof")
+		message = recv_mess()
+		if(message != "eof")		
+			f.write(message+"\n")
+			puts message
+		end
+	end
+	
 	f.close
 end
 
@@ -97,8 +110,7 @@ def thread_recv
 					
 				elsif (temp[0].eql? "create")
 					create(temp[1])
-				end
-		
+				end		
 		end
 	end
 end
