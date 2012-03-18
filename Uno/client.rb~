@@ -83,39 +83,36 @@ class Client
 				end
 			end
 		rescue
+			puts rojo("hola")
 			sendM("Error: verifica tu sintaxis")
 		end
 	end 
 
 	#emula comando cp
 	def cp(route)
-		begin
-			dir = File.split(route)
-			puts dir[0]
-			Dir.chdir(dir[0])
-			if(File.exists?(dir[1]))
-				puts "exist"
-				puts Dir.pwd
-				puts dir[1]
-				ext = File.extname(dir[1])
-				sendM("create #{dir[1]} ")
-				file = File.open(dir[1])
-				file.each do |line|
-					sendM(line)			
+		dir = File.split(route)
+		puts dir[0]
+		Dir.chdir(dir[0])
+		if(File.exists?(dir[1]))
+			puts "exist"
+			puts Dir.pwd
+			puts dir[1]
+			ext = File.extname(dir[1])
+			sendM("create #{dir[1]} ")
+			file = File.open(dir[1])
+			file.each do |line|
+				sendM(line)			
 						
-				end	
-				file.close
-				sendM("eof")		
+			end	
+			file.close
+			sendM("eof")		
 		
-			else
-				sendM("error el archivo no existe")
-			end
-		rescue
-			sendM("Error: verifica tu sintaxis")
-		end	
+		else
+			sendM("error el archivo no existe")
+		end
+	
 	end
- 
-	# Crea un archivo 
+	#crea un archivo 
 	def create(name)
 		f = File.new(name, "a")
 		message = ""

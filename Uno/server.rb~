@@ -2,18 +2,17 @@ require 'socket'
 
 class Server
 	
-	
 	@server
 
 	def initialize(puerto)
 		@server = TCPServer.new(puerto)
 	end
 	
-	def write(dir, menssage)
+	def sendM(dir, menssage)
 		dir.puts(menssage)
 	end
 
-	def recv(dir)
+	def getM(dir)
 		menssage = dir.gets.chomp
 	end
 
@@ -22,31 +21,18 @@ class Server
 		@current = ""
 		loop do 
 			Thread.start(@server.accept) do |connection|
-				#connection.puts("Nombre")
-				write(connection, "please, write your name")
+				sendM(connection, "Escribe tu nombre")
 				#@n = connection.gets.chomp
-				@n = recv(connection)
-				puts @n
-				m = connection.addr
-				#puts m
-				puts "hola!!!!"
+				@n = getM(connection)
+				puts "#{@n}, Se ha conectado"
 				@client [@n] = connection	
-				puts "hola bb"
-				write(connection, "you can sen messages, or type (ls,cd,cp) with the route ")
-				while line = recv(connection)
-					if (line.eql? 'share')
-								
-						file = File.open("routes.txt","w+")
-						file.write("client = #{@n}\n")
-						write(connection, "que ruta")
-						file.puts(recv(connection)+"\n")
-						file.close
-					end
+				sendM(connection, "Puedes enviar mensajes a los otros usuarios conectados")
+				sendM(connection, "Tambien puedes ejecutar los siguientes comandos: ls,cd,cp con su ruta")
+				while line = getM(connection)
 					@client.each do | name, socket |
-						if socket.eql? connection
-						else	
+						if !socket.eql? connection	
 							socket.puts(line)
-							puts("#{name}")
+							puts("#{name} envio #{line}")
 						end
 					end
 				end
@@ -58,7 +44,7 @@ class Server
 end
 
 if ARGV.size != 1
-  puts "Mode correcto de uso: ruby #{__FILE__} [puerto]"
+  puts "Mooe correcto de uso: ruby #{__FILE__} [puerto]"
 else
 	server = Server.new(ARGV[0].to_i)
   server.run
