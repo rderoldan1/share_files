@@ -26,8 +26,12 @@ class Server
 				write(connection, "please, write your name")
 				#@n = connection.gets.chomp
 				@n = recv(connection)
-				puts "Se ha conectado #{@n}"
+				puts @n
+				m = connection.addr
+				#puts m
+				puts "hola!!!!"
 				@client [@n] = connection	
+				puts "hola bb"
 				write(connection, "you can sen messages, or type (ls,cd,cp) with the route ")
 				while line = recv(connection)
 					if (line.eql? 'share')
