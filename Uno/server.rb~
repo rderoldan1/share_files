@@ -6,6 +6,7 @@ class Server
 
 	def initialize(puerto)
 		@server = TCPServer.new(puerto)
+		puts "Servidor listo, esperando conexiones"
 	end
 	
 	def sendM(dir, menssage)
@@ -31,7 +32,8 @@ class Server
 				while line = getM(connection)
 					@client.each do | name, socket |
 						if !socket.eql? connection	
-							socket.puts(line)
+							socket.puts(line})
+						else
 							puts("#{name} envio #{line}")
 						end
 					end
@@ -44,7 +46,7 @@ class Server
 end
 
 if ARGV.size != 1
-  puts "Mooe correcto de uso: ruby #{__FILE__} [puerto]"
+  puts "Modo correcto de uso: ruby #{__FILE__} [puerto]"
 else
 	server = Server.new(ARGV[0].to_i)
   server.run

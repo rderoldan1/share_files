@@ -1,8 +1,6 @@
 require 'socket'
 
 class Client
-	include Color
-
 	@client
 
 	def initialize(ip,puerto)
@@ -10,11 +8,12 @@ class Client
 	end
 	
 	def run
-		thread1 = Thread.new{thread_recv}
-		thread2 = Thread.new{thread_send}
-
-		thread1.join
-		thread2.join
+		# Hilos para escuchar y enviar mensajes
+		hilo1 = Thread.new{thread_get}
+		hilo2 = Thread.new{thread_send}
+	
+		hilo1.join
+		hilo2.join
 	end
 	
 	# Hilo de envio de mensajes
@@ -24,6 +23,8 @@ class Client
 				lineOut = STDIN.gets.chomp
 				if lineOut == "QUIT" || lineOut == "quit"
 					exit
+				elsif lineOut == "-help"
+					help
 				else
 					sendM(lineOut)
 				end
@@ -32,52 +33,50 @@ class Client
 	end
 
 	# Hilo de recivo de mensajes
-	def thread_recv
+	def thread_get
 
 		begin
 			while not @client.eof?
 				lineIn = getM()
 				puts lineIn		
 				temp  = lineIn.split(' ')
-					if (temp[0].eql? "cd")
+				case temp[0]
+					when "cd"
 						cd(temp[1])	
-					elsif (temp[0].eql? "ls")
+					when "ls"
 						ls(temp[1])
-					elsif (temp[0].eql? "cp")
-						cp(temp[1])					
-					elsif (temp[0].eql? "create")
-						create(temp[1])
-					elsif (temp[0].eql? 'quit')
-						exit
-					end		
+					when "cp"
+						cp(temp[1])
+					when "Crear"
+						crear(temp[1])
+				end	
 			end
 		end
 	end
 
-	#envia mensaje por socket
+	# Envia mensaje por socket
 	def sendM(message)
 		@client.puts(message)	
 	end
 
-	#revive mensaje del socket
+	# Recive mensaje del socket
 	def getM()
 		@client.gets.chomp
 	end	
 
-	#emula comando cd
-	def cd (route)
-		Dir.chdir(route)
-		#puts Dir.pwd
-		a = Dir.pwd
-		sendM(a)
+	# Emula comando cd
+	def cd (ruta)
+		Dir.chdir(ruta)
+		direccion = Dir.pwd
+		sendM(direccion)
 	end
 
-	#emula el comando ls
-	def ls(route)
+	# Emula el comando ls
+	def ls(ruta)
 		begin
-			a = Dir.entries(route)
+			direccion = Dir.entries(ruta)
 			exp = /^[a-zA-Z|0-9]/
-			a.each do | file |
+			direccion.each do | file |
 				if (exp.match(file))
 					sendM(file)
 				end
@@ -87,56 +86,56 @@ class Client
 		end
 	end 
 
-	#emula comando cp
-	def cp(route)
+	# Emula comando cp
+	def cp(ruta)
 		begin
-			dir = File.split(route)
-			puts dir[0]
-			Dir.chdir(dir[0])
-			if(File.exists?(dir[1]))
-				puts "exist"
-				puts Dir.pwd
-				puts dir[1]
-				ext = File.extname(dir[1])
-				sendM("create #{dir[1]} ")
-				file = File.open(dir[1])
-				file.each do |line|
-					sendM(line)			
-						
-				end	
-				file.close
-				sendM("eof")		
+			direccion = File.split(ruta)
+			ruta = direccion[0]
+			archivo = direccion[1]
+			Dir.chdir(ruta)
 		
+			if(File.exists?(archivo))
+				ext = File.extname(archivo)
+				sendM("Crear #{archivo} ")
+				file = File.open(archivo)
+
+				file.each do |line|
+					sendM(line)				
+				end	
+
+				file.close
+				sendM("eof")				
 			else
-				sendM("error el archivo no existe")
+				sendM("Error: el archivo o directorio no existe")
 			end
 		rescue
 			sendM("Error: verifica tu sintaxis")
-		end	
+		end
 	end
  
 	# Crea un archivo 
-	def create(name)
-		f = File.new(name, "a")
-		message = ""
-		while (message != "eof")
-			message = getM()
-			if(message != "eof")		
-				f.write(message+"\n")
-				puts message
+	def crear(name)
+		begin
+			f = File.new(name, "w+")
+			puts "Copiando archivo, por favor espere"
+			message = ""
+			while (message != "eof")
+				message = getM()
+				if(message != "eof")		
+					f.write(message+"\n")
+				end
 			end
+			f.close
+			puts "Archivo #{name} fue creado"
+		rescue
+			sendM("Error: verifica tu sintaxis")
 		end
-	
-		f.close
 	end
-
 	
-
-	
-
-
-	
-
+	def help
+		puts "-----------------Ayuda-----------------"
+		
+	end
 end
 
 if ARGV.size != 2

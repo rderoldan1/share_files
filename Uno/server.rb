@@ -6,6 +6,7 @@ class Server
 
 	def initialize(puerto)
 		@server = TCPServer.new(puerto)
+		puts "Servidor listo, esperando conexiones"
 	end
 	
 	def sendM(dir, menssage)
@@ -32,6 +33,7 @@ class Server
 					@client.each do | name, socket |
 						if !socket.eql? connection	
 							socket.puts(line)
+						else
 							puts("#{name} envio #{line}")
 						end
 					end

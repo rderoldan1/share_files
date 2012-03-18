@@ -1,0 +1,10 @@
+#Autores
+###Juan Sebastian Velez
+###Juan Esteban Mosquera
+###James David Benitez
+
+Reto-­‐03: 
+Diseñar e implementar un servicio de compartición sencilla de archivos entre clientes utilizando la arquitectura P2P y un middleware/framework P2P (FileP2P) 
+  
+#Modo de empleo
+En la carpeta _reto3_ hay 2 archivos ejecutables, server.rb y client.rb. Se debe de ejecutar el primer archivo server.rb, especificando el puerto que se desea utulizar `$ ruby server.rb 5555`.
