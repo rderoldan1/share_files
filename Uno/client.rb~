@@ -135,13 +135,11 @@ class Client
 	def help
 		puts "-----------------Ayuda-----------------"
 		puts "para examinar directorios:"
-		puts "\tejemplo ls /home/user/Escritorio"
+		puts "ejemplo ls /home/user/Escritorio"
 		puts "para copiar archivos:"
-		puts "\tejemplo cp /home/user/Escritorio/readme.txt"
+		puts "ejemplo cp /home/user/Escritorio/readme.txt"
 		puts "para cambiar de directorio:"
-		puts "\tejemplo cd /home/user/Escritorio"
-		puts "para terminar el programa:"
-		puts "\tquit"
+		puts "ejemplo cd /home/user/Escritorio"
 	end
 end
 
