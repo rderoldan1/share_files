@@ -21,7 +21,7 @@ loop do
 		@n = connection.gets.chomp
 		puts "#{@n} connected"
 		@client[@n] = connection
-		connection.puts("you can sen messages, or type (ls,cp) plus the route")
+		connection.puts("you can sen messages, for help type `help`")
 		while line = connection.gets.chomp
 			# Publicar un archivo
 			if line.split(" ")[0].eql? "public_file_save"

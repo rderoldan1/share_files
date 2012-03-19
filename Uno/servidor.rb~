@@ -40,7 +40,6 @@ class Server
 					# Envia la lista de los archivos guardados en el servidor
 					elsif line == "obtener_lista"
 						obtener_lista(connection)
-
 					# paso de mensajes hacia otros peers
 					else
 						@client.each do | nombre, socket |

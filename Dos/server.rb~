@@ -2,7 +2,7 @@ require 'socket'
 
 @server
 @client={}
-
+@files ={}
 
 
 if ARGV.size != 1
@@ -15,13 +15,13 @@ end
 
 loop do 
 	Thread.start(@server.accept) do |connection|
-		@files ={}
+
 		connection.puts("please, write your name")
 
 		@n = connection.gets.chomp
 		puts "#{@n} connected"
-		@client [@n] = connection	
-		connection.puts("you can sen messages, or type (ls,cp) plus the route")
+		@client[@n] = connection
+		connection.puts("you can sen messages, for help type help")
 		while line = connection.gets.chomp
 			# Publicar un archivo
 			if line.split(" ")[0].eql? "public_file_save"
@@ -37,7 +37,7 @@ loop do
 			elsif line.eql? "get public list"
 				list = ""
 				@files.each do |file, route|
-					list += "\tfile: #{file} found in #{route}\n"
+					list += "\tfile: #{route}/#{file}\n"
 				end
 				connection.puts(list)
 			else
