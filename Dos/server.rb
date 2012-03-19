@@ -20,7 +20,7 @@ loop do
 
 		@n = connection.gets.chomp
 		puts "#{@n} connected"
-		@client [@n] = connection	
+		@client[@n] = connection
 		connection.puts("you can sen messages, or type (ls,cp) plus the route")
 		while line = connection.gets.chomp
 			# Publicar un archivo
@@ -37,7 +37,7 @@ loop do
 			elsif line.eql? "get public list"
 				list = ""
 				@files.each do |file, route|
-					list += "\tfile: #{file} found in #{route}\n"
+					list += "\tfile: #{route}/#{file}\n"
 				end
 				connection.puts(list)
 			else
