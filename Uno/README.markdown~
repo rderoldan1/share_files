@@ -23,11 +23,5 @@ cp realiza la copia de un archivo que se encuentre en otro peer ejemplo `cp /hom
 #####cd
 cd desplaza al directorio indicado
 
-#####lista compartidos o lista c
-Trae una lista de archivos con su respectiva ruta, de esta forma el usuario puede saber que han compartido los peers 
-
-#####compartir
-Envia un archivo al servidor, de manera que todos los peers lo puedan ver y lo puedan copiar ejemplo `compartir /home/user/Escritorio/readme.txt`
-
 #####-help
 -help muestra en pantalla una lista de acciones que el usuario puede realizar

@@ -7,15 +7,20 @@ Luego correr varias veces el client.rb, se debe de especificar la ip del host y 
 Envio de mensajes
 Solo se copia un mensaje en la consola del cliente y se envia a todos los peers
 
-ls
 
-ls lista los ficheros y directorios, se debe copiar toda la ruta 
-	ls /home/user
+copy
 
-cp
+copy copia un archivo que se encuentre en otro peer
+	copy /home/user/algo.txt
 
-cp copia un archivo que se encuentre en otro peer
-	cp /home/user/algo.txt
+public
+
+Publica un archivo para que los demas peers lo puedan ver
+	public /home/user/algo.txt
+
+get public list
+
+obtine la lista de los archivos y su respectiva ubicacion 
 
 help
 

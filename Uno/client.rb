@@ -10,9 +10,9 @@ class Client
 	def run
 		# Hilos para escuchar y enviar mensajes
 		hilo1 = Thread.new{leer}
-		hilo1.join
-
 		hilo2 = Thread.new{escribir}	
+
+		hilo1.join
 		hilo2.join
 	end
 	
@@ -23,6 +23,10 @@ class Client
 				lineOut = STDIN.gets.chomp
 				if lineOut == "QUIT" || lineOut == "quit"
 					exit
+				elsif lineOut.split(" ")[0] == "compartir"
+					compartir(lineOut.split(" ",2)[1])
+				elsif lineOut == "lista compartidos" || lineOut == "lista c"
+					obtener_lista
 				elsif lineOut == "-help"
 					ayuda
 				else
@@ -34,7 +38,6 @@ class Client
 
 	# Hilo de recivo de mensajes
 	def leer
-
 		begin
 			while not @conexion.eof?
 				lineIn = getM()
@@ -44,9 +47,9 @@ class Client
 					when "cd"
 						cd(temp[1])	
 					when "ls"
-						ls(temp[1])
+						examinar(temp[1])
 					when "cp"
-						cp(temp[1])
+						copiar(temp[1])
 					when "Crear"
 						crear(temp[1])
 				end	
@@ -72,7 +75,7 @@ class Client
 	end
 
 	# Emula el comando ls
-	def ls(ruta)
+	def examinar(ruta)
 		begin
 			direccion = Dir.entries(ruta)
 			inicio = /^[\w|\d]/
@@ -87,7 +90,7 @@ class Client
 	end 
 
 	# Emula comando cp
-	def cp(ruta)
+	def copiar(ruta)
 		begin
 			direccion = File.split(ruta)
 			ruta = direccion[0]
@@ -131,13 +134,22 @@ class Client
 			sendM("Error: verifica tu sintaxis")
 		end
 	end
+
+	def compartir(link)
+		sendM("publicar_archivo #{link}")
+	end
+
+	# Obtiene la lista de todos los archivos que han compartido lo peers
+	def obtener_lista
+		sendM("obtener_lista")
+	end
 	
 	def ayuda
 		puts "-----------------Ayuda-----------------"
 		puts "para examinar directorios:"
-		puts "\tejemplo ls /home/user/Escritorio"
+		puts "\tejemplo examinar /home/user/Escritorio"
 		puts "para copiar archivos:"
-		puts "\tejemplo cp /home/user/Escritorio/readme.txt"
+		puts "\tejemplo copiar /home/user/Escritorio/readme.txt"
 		puts "para cambiar de directorio:"
 		puts "\tejemplo cd /home/user/Escritorio"
 		puts "para terminar el programa:"

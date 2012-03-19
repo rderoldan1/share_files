@@ -1,11 +1,15 @@
 require 'socket'
 
+load "compartidos.rb"
+
 class Server
 	
 	@server
+	@compartidos 
 
 	def initialize(puerto)
 		@server = TCPServer.new(puerto)
+		@compartidos = Compartidos.new
 		puts "Servidor listo, esperando conexiones"
 	end
 	
@@ -29,11 +33,35 @@ class Server
 				sendM(connection, "Puedes enviar mensajes a los otros usuarios conectados")
 				sendM(connection, "Tambien puedes ejecutar los siguientes comandos: ls,cd,cp con su ruta")
 				while line = getM(connection)
-					@client.each do | nombre, socket |
-						if !socket.eql? connection	
-							socket.puts(line)
-						else
-							puts("#{nombre} envio #{line}")
+					# Envia la lista de los archivos guardados en el servidor
+					if line == "obtener_lista"
+						lista = ""
+						@compartidos.get_archivos.each do |archivo, ruta|
+							lista += "Archivo: #{archivo} se encuentra en: #{ruta}\n"
+						end
+						connection.puts(lista)
+					# Guarda la ruta y el nombre de un archivo en el servidor
+					elsif line.split(" ")[0] == "publicar_archivo"
+						begin
+							direccion = File.split(line.split(" ")[1])
+							ruta = direccion[0]
+							archivo = direccion[1]
+							@compartidos.set_archivos(archivo, ruta)
+							@client.each do | nombre, socket |
+								socket.puts("El archivo #{archivo} fue publicado, su ruta es #{ruta}")
+								puts("archivo: #{archivo}, ruta: #{ruta}")
+						end
+						rescue
+							connection.puts("Error:")
+						end
+					# paso de mensajes hacia otros peers
+					else
+						@client.each do | nombre, socket |
+							if !socket.eql? connection	
+								socket.puts(line)
+							else
+								puts("#{nombre} envio #{line}")
+							end
 						end
 					end
 				end

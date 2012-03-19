@@ -2,7 +2,8 @@ require 'socket'
 
 @server
 @client={}
-@archivos
+@files ={}
+
 
 if ARGV.size != 1
   puts "Usage: ruby #{__FILE__} [port]"
@@ -10,7 +11,6 @@ if ARGV.size != 1
 else
 	@server = TCPServer.new(ARGV[0].to_i)
 end
-
 
 
 loop do 
@@ -23,9 +23,29 @@ loop do
 		@client [@n] = connection	
 		connection.puts("you can sen messages, or type (ls,cp) plus the route")
 		while line = connection.gets.chomp
-			@client.each do | name, socket |
-				if socket != connection	
-					socket.puts(line)
+			# Publicar un archivo
+			if line.split(" ")[0].eql? "public_file_save"
+				dir = line.split(" ", 2)
+				dir = File.split(dir[1])
+				route = dir[0]
+				file = dir[1]
+				@files[file] = route
+				# Decirle a todos los peers que el archivo esta online
+				@client.each do | name, socket |
+					socket.puts("#{file} ha sido publicado")
+				end
+			elsif line.eql? "get public list"
+				list = ""
+				@files.each do |file, route|
+					list += "\tfile: #{file} found in #{route}\n"
+				end
+				connection.puts(list)
+			else
+				# Envio de mensajes entre los peers
+				@client.each do | name, socket |
+					if socket != connection	
+						socket.puts(line)
+					end
 				end
 			end
 		end	

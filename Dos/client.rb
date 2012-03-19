@@ -2,6 +2,7 @@ require 'socket'
 
 @client
 @out = 0
+@actual = ""+File.expand_path(File.dirname(File.dirname(__FILE__)))
 
 if ARGV.size != 2
   puts "Usage: ruby #{__FILE__} [host] [port]"
@@ -24,37 +25,48 @@ def search(route)
 	end
 end 
 
-def public(archivo)
-	dir = File.split(route)
-	Dir.chdir(dir[0])
-	if(File.exists?(dir[1]))
-		puts("dir #{dir[0]} archivo #{dir[1]}")
-	else
-		puts("error el archivo no existe")
-	end	
+# Publicar un archivo para que otros peers lo puedan ver
+def publish(file)
+	begin
+		dir = File.split(file)
+		Dir.chdir(dir[0])
+		if(File.exists?(dir[1]))
+			Dir.chdir(@actual)
+			@client.puts("public_file_save #{file}")
+		else
+			puts("error el archivo no existe")
+		end	
+	rescue
+		puts "Error"
+	end
+end
+
+# Imprime una lista de los archivos publicos en el servidor
+def get_public_list(out)
+	@client.puts(out)
 end
 
 def copy(route)
 	dir = File.split(route)
-	puts dir[0]
 	Dir.chdir(dir[0])
 	if(File.exists?(dir[1]))
-		puts "Preparando copiado"
+		@client.puts("Preparando copiado")
 		ext = File.extname(dir[1])
-		@client.puts("Copy #{dir[1]}")
+		@client.puts("Copying #{dir[1]}")
 		file = File.open(dir[1])
 		file.each do |line|
 			@client.puts(line)			
 		end	
 		file.close
 		@client.puts("eof")		
-		puts "Archivo copiado con exito"
+		@client.puts("Archivo copiado con exito")
 	else
 		@client.puts("error el archivo no existe")
 	end
 	
 end
 
+# Crea el archivo entrante
 def copying(name)
 	begin
 		f = File.new(name, "w+")
@@ -71,7 +83,7 @@ def copying(name)
 	end
 end
 
-
+# Hilo para enviar los mensajes
 def thread_send
 	begin	
 		while not STDIN.eof?
@@ -80,9 +92,11 @@ def thread_send
 				help
 			elsif out.eql? "quit"
 				exit
-			elsif out.split(" ").eql? "public"
+			elsif out.split(" ")[0].eql? "public"
 				out = out.split(" ", 2)
-				public(out[1])
+				publish(out[1])
+			elsif out.eql? "get public list"
+				get_public_list(out)
 			else
 				@client.puts(out)
 			end
@@ -90,28 +104,31 @@ def thread_send
 	end
 end
 
-
+# Hilo para recivir los mensajes
 def thread_read
 	begin
 		while not @client.eof?
 			messageIn = @client.gets.chomp
 			puts messageIn		
 			temp  = messageIn.split(' ')
-				if (temp[0].eql? "ls")
-					search(temp[1])
-				elsif (temp[0].eql? "cp")					
+				if (temp[0].eql? "copy")					
 					copy(temp[1])
-				elsif (temp[0].eql? "Copy")
+				elsif (temp[0].eql? "Copying")
 					copying(temp[1])
 				end		
 		end
 	end
 end
 
+
 def help
 	puts "Ayuda"
-	puts "Algo"
-	puts "algo mas"
+	puts "copy: copy copia un archivo que se encuentre en otro peer"
+	puts "\tcopy /home/user/algo.txt"
+	puts "public: publica un archivo para que los demas peers lo puedan ver"
+	puts "\tpublic /home/user/algo.txt"
+	puts "get public list: obtine la lista de los archivos y su respectiva ubicacion "
+
 end
 
 

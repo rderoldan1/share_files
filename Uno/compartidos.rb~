@@ -1,0 +1,28 @@
+class Compartidos
+	@archivos
+	def initialize
+		@archivos = {}
+		@archivos["a"] = 1
+		@archivos["c"] = 1
+		@archivos["v"] = 1
+		@archivos["b"] = 1		
+		@archivos["n"] = 1
+		@archivos["l"] = 1
+		@archivos["k"] = 1
+		@archivos["aj"] = 1
+		@archivos["g"] = 1
+		@archivos["f"] = 1
+		@archivos["d"] = 1
+		@archivos["s"] = 1
+		@archivos["y"] = 1
+	end 
+
+	def get_archivos
+		@archivos
+	end	
+
+	def set_archivos(archivo, ruta)
+		@archivos[archivo] = ruta
+	end
+
+end
