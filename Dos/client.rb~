@@ -54,6 +54,7 @@ def copying(name)
 			message = @client.gets.chomp
 			if(message != "eof")		
 				f.write(message+"\n")
+				puts message
 			end
 		end
 		f.close

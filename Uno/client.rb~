@@ -1,10 +1,10 @@
 require 'socket'
 
 class Client
-	@conexion
+	@client
 
 	def initialize(ip,puerto)
-		@conexion = TCPSocket.new(ip,puerto)
+		@client = TCPSocket.new(ip,puerto)
 	end
 	
 	def run
@@ -36,7 +36,7 @@ class Client
 	def leer
 
 		begin
-			while not @conexion.eof?
+			while not @client.eof?
 				lineIn = getM()
 				puts lineIn		
 				temp  = lineIn.split(' ')
@@ -56,12 +56,12 @@ class Client
 
 	# Envia mensaje por socket
 	def sendM(message)
-		@conexion.puts(message)	
+		@client.puts(message)	
 	end
 
 	# Recive mensaje del socket
 	def getM()
-		@conexion.gets.chomp
+		@client.gets.chomp
 	end	
 
 	# Emula comando cd

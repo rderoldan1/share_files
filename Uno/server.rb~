@@ -23,9 +23,9 @@ class Server
 			Thread.start(@server.accept) do |connection|
 				sendM(connection, "Escribe tu nombre")
 
-				@usuario = getM(connection)
-				puts "#{@usuario}, Se ha conectado"
-				@client [@usuario] = connection	
+				@n = getM(connection)
+				puts "#{@n}, Se ha conectado"
+				@client [@n] = connection	
 				sendM(connection, "Puedes enviar mensajes a los otros usuarios conectados")
 				sendM(connection, "Tambien puedes ejecutar los siguientes comandos: ls,cd,cp con su ruta")
 				while line = getM(connection)

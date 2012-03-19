@@ -1,7 +1,22 @@
-p2p application to share files and emulate a local file system
-to run the application first run the server with the follow 
-command: ruby server.rb
-then run the client with 
-ruby client.rb
+Aplicacion P2P para intercambiar archivos emulando un file system local
+para correr la aplicacion
+correr primero server.rb, especificando el puerto que se desea utulizar ruby server.rb 2000
+Luego correr varias veces el client.rb, se debe de especificar la ip del host y su puerto ruby client 127.0.0.1 2000
 
 
+Envio de mensajes
+Solo se copia un mensaje en la consola del cliente y se envia a todos los peers
+
+ls
+
+ls lista los ficheros y directorios, se debe copiar toda la ruta 
+	ls /home/user
+
+cp
+
+cp copia un archivo que se encuentre en otro peer
+	cp /home/user/algo.txt
+
+help
+
+help muestra una lista de opciones que el usuario tiene 

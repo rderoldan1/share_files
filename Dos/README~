@@ -1,0 +1,5 @@
+Aplicacion P2P para intercambiar archivos emulando un file system local
+para correr la aplicacion
+correr primero server.rb, especificando el puerto que se desea utulizar ruby server.rb 2000
+Luego correr varias veces el client.rb, se debe de especificar la ip del host y su puerto ruby client 127.0.0.1 2000
+
