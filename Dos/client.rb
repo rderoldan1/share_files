@@ -24,6 +24,15 @@ def search(route)
 	end
 end 
 
+def public(archivo)
+	dir = File.split(route)
+	Dir.chdir(dir[0])
+	if(File.exists?(dir[1]))
+		puts("dir #{dir[0]} archivo #{dir[1]}")
+	else
+		puts("error el archivo no existe")
+	end	
+end
 
 def copy(route)
 	dir = File.split(route)
@@ -71,6 +80,9 @@ def thread_send
 				help
 			elsif out.eql? "quit"
 				exit
+			elsif out.split(" ").eql? "public"
+				out = out.split(" ", 2)
+				public(out[1])
 			else
 				@client.puts(out)
 			end

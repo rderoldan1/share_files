@@ -2,6 +2,7 @@ require 'socket'
 
 @server
 @client={}
+@archivos
 
 if ARGV.size != 1
   puts "Usage: ruby #{__FILE__} [port]"
