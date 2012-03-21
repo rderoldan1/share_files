@@ -1,0 +1,8 @@
+Requisitos & Instalación
+========================
+
+Ubuntu
+Se debe tener instalado Ruby 1.9. 
+
+Windows
+Si no se tiene Ruby instalado, recomendos el siguiente link http://rubyinstaller.org/
