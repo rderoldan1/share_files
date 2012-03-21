@@ -1,6 +1,7 @@
 require 'socket'
 
 load "compartidos.rb"
+load "clientes.rb"
 
 class Server
 	
@@ -22,14 +23,14 @@ class Server
 	end
 
 	def run
-		@client={}
+		@clientes = Clientes.new
 		loop do 
 			Thread.start(@server.accept) do |connection|
 				sendM(connection, "Escribe tu nombre")
 
 				@usuario = getM(connection)
 				puts "#{@usuario}, Se ha conectado"
-				@client [@usuario] = connection	
+				@clientes.set_clientes(@usuario, connection)
 				sendM(connection, "Puedes enviar mensajes a los otros usuarios conectados")
 				sendM(connection, "Tambien puedes ejecutar los siguientes comandos: ls,cd,cp con su ruta")
 				while line = getM(connection)
@@ -43,7 +44,7 @@ class Server
 
 					# paso de mensajes hacia otros peers
 					else
-						@client.each do | nombre, socket |
+						@clientes.get_clientes.each do | nombre, socket |
 							if !socket.eql? connection	
 								socket.puts(line)
 							else
@@ -63,7 +64,7 @@ class Server
 			ruta = direccion[0]
 			archivo = direccion[1]
 			@compartidos.set_archivos(archivo, ruta)
-			@client.each do | nombre, socket |
+			@clientes.get_clientes.each do | nombre, socket |
 				socket.puts("El archivo #{archivo} fue publicado, su ruta es #{ruta}")								
 			end
 			puts("archivo: #{archivo}, ruta: #{ruta}")

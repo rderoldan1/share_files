@@ -2,6 +2,7 @@ require 'socket'
 
 @server
 @client={}
+@client_number = 1
 @files ={}
 
 
@@ -16,12 +17,10 @@ end
 loop do 
 	Thread.start(@server.accept) do |connection|
 
-		connection.puts("please, write your name")
-
-		@n = connection.gets.chomp
-		puts "#{@n} connected"
-		@client[@n] = connection
-		connection.puts("you can sen messages, for help type `help`")
+		puts "#{@client_number} connected"
+		@client[@client_number] = connection
+		connection.puts("You are connected as client#{@client_number}\nNow you can sen messages, for help type `help`")
+		@client_number = @client_number + 1
 		while line = connection.gets.chomp
 			# Publicar un archivo
 			if line.split(" ")[0].eql? "public_file_save"
