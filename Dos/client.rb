@@ -2,7 +2,7 @@ require 'socket'
 
 @client
 @out = 0
-@actual = ""+File.expand_path(File.dirname(File.dirname(__FILE__)))
+@actual = File.expand_path(File.dirname(File.dirname(__FILE__)))
 
 if ARGV.size != 2
   puts "Usage: ruby #{__FILE__} [host] [port]"
@@ -69,6 +69,7 @@ end
 # Crea el archivo entrante
 def copying(name)
 	begin
+		Dir.chdir(@actual)
 		f = File.new(name, "w+")
 		message = ""
 		while (message != "eof")

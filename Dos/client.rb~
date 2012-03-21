@@ -123,8 +123,12 @@ end
 
 def help
 	puts "Ayuda"
-	puts "Algo"
-	puts "algo mas"
+	puts "copy: copy copia un archivo que se encuentre en otro peer"
+	puts "\tcopy /home/user/algo.txt"
+	puts "public: publica un archivo para que los demas peers lo puedan ver"
+	puts "\tpublic /home/user/algo.txt"
+	puts "get public list: obtine la lista de los archivos y su respectiva ubicacion "
+
 end
 
 

@@ -2,9 +2,11 @@ require 'socket'
 
 class Client
 	@conexion
+	@ruta_base
 
 	def initialize(ip,puerto)
 		@conexion = TCPSocket.new(ip,puerto)
+		@ruta_base = ""+File.expand_path(File.dirname(File.dirname(__FILE__)))
 	end
 	
 	def run
@@ -41,7 +43,6 @@ class Client
 		begin
 			while not @conexion.eof?
 				lineIn = getM()
-				puts lineIn		
 				temp  = lineIn.split(' ')
 				case temp[0]
 					when "cd"
@@ -52,6 +53,8 @@ class Client
 						copiar(temp[1])
 					when "Crear"
 						crear(temp[1])
+					else 
+						puts lineIn	
 				end	
 			end
 		end
@@ -95,11 +98,13 @@ class Client
 			direccion = File.split(ruta)
 			ruta = direccion[0]
 			archivo = direccion[1]
+			# Establecer el path del archivo a copiar
 			Dir.chdir(ruta)
-		
+			
+			# Preguntar si el archivo existe dentro del path para luego enviarlo
 			if(File.exists?(archivo))
 				ext = File.extname(archivo)
-				sendM("Crear #{archivo} ")
+				sendM("Crear #{archivo}")
 				file = File.open(archivo)
 
 				file.each do |line|
@@ -119,8 +124,10 @@ class Client
 	# Crea un archivo 
 	def crear(name)
 		begin
+			# Establecer el path al mismo de cliente.rb para que el archivo que se va a copiar quede en el mismo directorio
+			Dir.chdir(@ruta_base)
 			f = File.new(name, "w+")
-			puts "Copiando archivo, por favor espere"
+			puts "\tCopiando archivo, por favor espere"
 			message = ""
 			while (message != "eof")
 				message = getM()
@@ -129,12 +136,13 @@ class Client
 				end
 			end
 			f.close
-			puts "Archivo #{name} fue creado"
+			puts "\tArchivo #{name} fue creado"
 		rescue
 			sendM("Error: verifica tu sintaxis")
 		end
 	end
 
+	# Metodo para compartir la ruta de un archivo con otros peers
 	def compartir(link)
 		sendM("publicar_archivo #{link}")
 	end
@@ -143,7 +151,7 @@ class Client
 	def obtener_lista
 		sendM("obtener_lista")
 	end
-	
+
 	def ayuda
 		puts "-----------------Ayuda-----------------"
 		puts "para examinar directorios:"
@@ -152,6 +160,10 @@ class Client
 		puts "\tejemplo copiar /home/user/Escritorio/readme.txt"
 		puts "para cambiar de directorio:"
 		puts "\tejemplo cd /home/user/Escritorio"
+		puts "para compartir un archivo:"
+		puts "\tejemplo compartir /home/user/Escritorioreadme.txt"
+		puts "para ver la lista de archivos compartidos:"
+		puts "\tejemplo lista compartidos o lista c"
 		puts "para terminar el programa:"
 		puts "\tquit"
 	end
